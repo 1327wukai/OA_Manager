@@ -1,0 +1,8 @@
+# 默认忽略的文件
+/shelf/
+/workspace.xml
+# 数据源本地存储已忽略文件
+/../../../../../../../../../:\下载过的安装包\企业OA\基于ssm的企业OA（考勤）管理系统\OA-main\项目源码\OA_Manager\OA_Manager\.idea/dataSources/
+/dataSources.local.xml
+# 基于编辑器的 HTTP 客户端请求
+/httpRequests/

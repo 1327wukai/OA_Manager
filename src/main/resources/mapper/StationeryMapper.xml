@@ -1,0 +1,206 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+<!--<mapper namespace="com.njl.oa.dao.StationeryDao">-->
+
+<!--    <resultMap id="StationeryMap" type="com.njl.oa.entity.Stationery">-->
+<!--        <id column="STATIONERY_ID" property="stationeryId" jdbcType="INTEGER"/>-->
+<!--        <result column="STATIONERY_NAME" property="stationeryName" jdbcType="VARCHAR"/>-->
+<!--        <result column="STATIONERY_EXPLAIN" property="stationeryExplain" jdbcType="VARCHAR"/>-->
+<!--        <result column="STATIONERY_COUNT" property="stationeryCount" jdbcType="INTEGER"/>-->
+<!--        <result column="STATIONERY_CLASSIFY" property="stationeryClassify" jdbcType="VARCHAR"/>-->
+<!--        <result column="CREATION_TIME" property="creationTime" jdbcType="INTEGER"/>-->
+<!--    </resultMap>-->
+<!--    <resultMap id="StationeryProposerMap" type="com.njl.oa.entity.StationeryProposer">-->
+<!--        <id column="STATIONERY_EMPLOYEE_REL_ID" property="stationeryEmployeeRelId" jdbcType="INTEGER"/>-->
+<!--        <result column="STATIONERY_ID" property="stationeryId" jdbcType="INTEGER"/>-->
+<!--        <result column="EMPLOYEE_ID" property="employeeId" jdbcType="INTEGER"/>-->
+<!--        <result column="STATIONERY_COUNT" property="stationeryCount" jdbcType="INTEGER"/>-->
+<!--        <result column="CREATION_TIME" property="creationTime" jdbcType="INTEGER"/>-->
+<!--        <result column="APPROVE" property="approve" jdbcType="INTEGER"/>-->
+<!--        <result column="RECEIPT" property="receipt" jdbcType="VARCHAR"/>-->
+<!--        <result column="EXPLAIN" property="explain" jdbcType="VARCHAR"/>-->
+<!--        <result column="APPROVE_EMPLOYEE_Id" property="approveEmployeeId" jdbcType="INTEGER"/>-->
+
+<!--        <result column="APPROVE_EMPLOYEE_NAME" property="approveEmployeeName" jdbcType="VARCHAR"/>-->
+<!--        <result column="STATIONERY_NAME" property="stationeryName" jdbcType="VARCHAR"/>-->
+<!--        <result column="PROPOSER" property="proposer" jdbcType="VARCHAR"/>-->
+<!--        <result column="EMPLOYEE_NAME" property="employeeName" jdbcType="VARCHAR"/>-->
+<!--    </resultMap>-->
+
+<!--    &lt;!&ndash; 查看全部办公用品 &ndash;&gt;-->
+<!--    <select id="selectStationeryAll" resultMap="StationeryMap">-->
+<!--        SELECT *-->
+<!--        FROM bio_stationery bs-->
+<!--        ORDER BY bs.`STATIONERY_ID` DESC-->
+<!--        LIMIT #{page},#{limit};-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 根据雇员工号查看申请办公用品记录 &ndash;&gt;-->
+<!--    <select id="selectStationeryByEmployeeNumber" resultMap="StationeryProposerMap">-->
+<!--        SELECT bse.*,-->
+<!--               se.`EMPLOYEE_NAME`,-->
+<!--               bs.STATIONERY_NAME,-->
+<!--               (SELECT se1.EMPLOYEE_NAME-->
+<!--                FROM sys_employee se1-->
+<!--                WHERE se1.EMPLOYEE_ID = bse.APPROVE_EMPLOYEE_Id) APPROVE_EMPLOYEE_NAME-->
+<!--        FROM bio_stationery bs-->
+<!--                 INNER JOIN bio_stationery_employee bse ON bs.`STATIONERY_ID` = bse.`STATIONERY_ID`-->
+<!--                 INNER JOIN sys_employee se ON bse.`EMPLOYEE_ID` = se.`EMPLOYEE_ID`-->
+<!--        WHERE se.`EMPLOYEE_NUMBER` = #{employeeNumber}-->
+<!--        ORDER BY bs.`STATIONERY_ID` DESC-->
+<!--        LIMIT #{page},#{limit};-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 查询全部办公用品添加记录 &ndash;&gt;-->
+<!--    <select id="selectStationeryAddAll" resultMap="StationeryMap">-->
+<!--        SELECT bsa.*, bs.`STATIONERY_NAME`-->
+<!--        FROM bio_stationery bs-->
+<!--                 INNER JOIN bio_stationery_add bsa ON bs.`STATIONERY_ID` = bsa.`STATIONERY_ID`-->
+<!--        ORDER BY bs.`STATIONERY_ID` DESC-->
+<!--        LIMIT #{page},#{limit};-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 查询全部办公用品添加记录总数 &ndash;&gt;-->
+<!--    <select id="selectStationeryAddAllCount" resultType="Integer">-->
+<!--        SELECT count(*)-->
+<!--        FROM bio_stationery bs-->
+<!--                 INNER JOIN bio_stationery_add bsa ON bs.`STATIONERY_ID` = bsa.`STATIONERY_ID`-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 添加新办公用品 &ndash;&gt;-->
+<!--    <insert id="addStationery" parameterType="Stationery">-->
+<!--        INSERT INTO `bio_stationery` (`STATIONERY_NAME`,-->
+<!--                                                `STATIONERY_EXPLAIN`,-->
+<!--                                                `STATIONERY_COUNT`,-->
+<!--                                                `STATIONERY_CLASSIFY`,-->
+<!--                                                `CREATION_TIME`)-->
+<!--        VALUES (#{stationeryName},-->
+<!--                #{stationeryExplain},-->
+<!--                #{stationeryCount},-->
+<!--                #{stationeryClassify},-->
+<!--                NOW());-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash; 修改新办公用品信息 &ndash;&gt;-->
+<!--    <update id="updateStationery" parameterType="Stationery">-->
+<!--        UPDATE-->
+<!--            `bio_stationery`-->
+<!--        SET `STATIONERY_NAME`     = #{stationeryName},-->
+<!--            `STATIONERY_EXPLAIN`  = #{stationeryExplain},-->
+<!--            `STATIONERY_COUNT`    = #{stationeryCount},-->
+<!--            `STATIONERY_CLASSIFY` = #{stationeryClassify}-->
+<!--        WHERE `STATIONERY_ID` = #{stationeryId};-->
+<!--    </update>-->
+
+<!--    &lt;!&ndash; 删除办公用品 &ndash;&gt;-->
+<!--    <delete id="deleteStationery">-->
+<!--        DELETE-->
+<!--        FROM `bio_stationery`-->
+<!--        WHERE `STATIONERY_ID` = #{stationeryId};-->
+<!--    </delete>-->
+
+<!--    &lt;!&ndash; 申请办公用品 &ndash;&gt;-->
+<!--    <insert id="applicationForOfficeSupplies" parameterType="com.njl.oa.entity.StationeryProposer">-->
+<!--        INSERT INTO `bio_stationery_employee` (`STATIONERY_ID`,-->
+<!--                                                         `EMPLOYEE_ID`,-->
+<!--                                                         `STATIONERY_COUNT`,-->
+<!--                                                         `CREATION_TIME`,-->
+<!--                                                         `APPROVE_EMPLOYEE_Id`,-->
+<!--                                                         `EXPLAIN`)-->
+<!--        VALUES (#{stationeryProposer.stationeryId},-->
+<!--                (SELECT se.`EMPLOYEE_ID` FROM sys_employee se WHERE se.`EMPLOYEE_NUMBER` = #{employeeNumber}),-->
+<!--                #{stationeryProposer.stationeryCount},-->
+<!--                NOW(),-->
+<!--                #{stationeryProposer.approveEmployeeId},-->
+<!--                #{stationeryProposer.explain});-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash; 办公用品仓库添加 &ndash;&gt;-->
+<!--    <insert id="officeSuppliesWarehouseAdded" parameterType="com.njl.oa.entity.StationeryAdd">-->
+<!--        INSERT INTO `bio_stationery_add` (`STATIONERY_ID`,-->
+<!--                                                    `STATIONERY_COUNT`,-->
+<!--                                                    `STATIONERY_EXPLAIN`,-->
+<!--                                                    `CREATION_TIME`)-->
+<!--        VALUES (#{stationeryId},-->
+<!--                #{stationeryCount},-->
+<!--                #{stationeryExplain},-->
+<!--                NOW());-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash; 办公用品数量的修改 &ndash;&gt;-->
+<!--    <update id="updateStationeryCount">-->
+<!--        UPDATE-->
+<!--            `bio_stationery`-->
+<!--        SET `STATIONERY_COUNT` = `STATIONERY_COUNT` + #{stationeryCount}-->
+<!--        WHERE `STATIONERY_ID` = #{stationeryId};-->
+<!--    </update>-->
+
+<!--    &lt;!&ndash; 查看全部办公用品总数 &ndash;&gt;-->
+<!--    <select id="selectStationeryAllCount" resultType="Integer">-->
+<!--        SELECT count(*)-->
+<!--        FROM bio_stationery bs;-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 根据DepartmentHeadId查询雇员工号 &ndash;&gt;-->
+<!--    <select id="selectEmployeeIdByDepartmentHeadId" resultType="Integer">-->
+<!--        SELECT se.`EMPLOYEE_ID`-->
+<!--        FROM sys_department sd-->
+<!--                 INNER JOIN sys_employee se ON sd.`DEPARTMENT_HEAD_ID` = se.`EMPLOYEE_ID`-->
+<!--        WHERE sd.`DEPARTMENT_HEAD_ID` = #{departmentHeadId};-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 根据自身工号查询正在申请办公用品 &ndash;&gt;-->
+<!--    <select id="selectStationeryApprovalInformation" resultMap="StationeryProposerMap">-->
+<!--        SELECT bse.*,-->
+<!--               bs.`STATIONERY_NAME`,-->
+<!--               se.EMPLOYEE_NAME,-->
+<!--               (SELECT se2.EMPLOYEE_NAME FROM sys_employee se2 WHERE bse.`EMPLOYEE_ID` = se2.EMPLOYEE_ID) PROPOSER-->
+<!--        FROM bio_stationery_employee bse-->
+<!--                 INNER JOIN sys_employee se ON bse.`APPROVE_EMPLOYEE_Id` = se.`EMPLOYEE_ID`-->
+<!--                 INNER JOIN bio_stationery bs ON bse.`STATIONERY_ID` = bs.`STATIONERY_ID`-->
+<!--          AND bse.`APPROVE` = 0-->
+<!--        ORDER BY bse.`STATIONERY_EMPLOYEE_REL_ID` DESC-->
+<!--        LIMIT #{page},#{limit};-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 根据自身工号查询正在申请办公用品总数 &ndash;&gt;-->
+<!--    <select id="selectStationeryApprovalInformationCount" resultType="Integer">-->
+<!--        SELECT count(*)-->
+<!--        FROM bio_stationery_employee bse-->
+<!--                 INNER JOIN sys_employee se ON bse.`APPROVE_EMPLOYEE_Id` = se.`EMPLOYEE_ID`-->
+<!--                 INNER JOIN bio_stationery bs ON bse.`STATIONERY_ID` = bs.`STATIONERY_ID`-->
+<!--          AND bse.`APPROVE` = 0;-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 修改申请办公用品审批状态 &ndash;&gt;-->
+<!--    <update id="updateStationeryApprovalApprove">-->
+<!--        UPDATE-->
+<!--            `bio_stationery_employee`-->
+<!--        SET `APPROVE` = #{approve},-->
+<!--            `RECEIPT` = #{receipt}-->
+<!--        WHERE `STATIONERY_EMPLOYEE_REL_ID` = #{stationeryEmployeeRelId};-->
+<!--    </update>-->
+
+<!--    &lt;!&ndash; 查询申请办公用品审批历史 &ndash;&gt;-->
+<!--    <select id="selectStationeryApproverMarkHistory" resultMap="StationeryProposerMap">-->
+<!--        SELECT bse.*,-->
+<!--               bs.`STATIONERY_NAME`,-->
+<!--               se.EMPLOYEE_NAME,-->
+<!--               (SELECT se2.EMPLOYEE_NAME FROM sys_employee se2 WHERE bse.`EMPLOYEE_ID` = se2.EMPLOYEE_ID) PROPOSER-->
+<!--        FROM bio_stationery_employee bse-->
+<!--                 INNER JOIN sys_employee se ON bse.`APPROVE_EMPLOYEE_Id` = se.`EMPLOYEE_ID`-->
+<!--                 INNER JOIN bio_stationery bs ON bse.`STATIONERY_ID` = bs.`STATIONERY_ID`-->
+<!--          AND bse.`APPROVE` != 0-->
+<!--        ORDER BY bse.`STATIONERY_EMPLOYEE_REL_ID` DESC-->
+<!--        LIMIT #{page},#{limit};-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 查询申请办公用品审批历史总数 &ndash;&gt;-->
+<!--    <select id="selectStationeryApproverMarkHistoryCount" resultType="Integer">-->
+<!--        SELECT count(*)-->
+<!--        FROM bio_stationery_employee bse-->
+<!--                 INNER JOIN sys_employee se ON bse.`APPROVE_EMPLOYEE_Id` = se.`EMPLOYEE_ID`-->
+<!--                 INNER JOIN bio_stationery bs ON bse.`STATIONERY_ID` = bs.`STATIONERY_ID`-->
+<!--          AND bse.`APPROVE` != 0-->
+<!--    </select>-->
+<!--</mapper>-->
